@@ -8,6 +8,7 @@ import RestaurantDetails from './screens/RestaurantDetails';
 import HomePage from './screens/HomePage';
 import ChatPage from './screens/ChatPage';
 import RequestPage from './screens/RequestPage';
+import SignInScreen from './screens/SignInScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -43,17 +44,23 @@ function RestaurantOverview() {
 }
 
 export default function App() {
-  return (
-    <>
-      <StatusBar style="auto" />
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{
-          headerShown: false,
-        }}>
-          <Stack.Screen name="RestaurantOverview" component={RestaurantOverview} />
-          <Stack.Screen name="RestaurantDetails" component={RestaurantDetails} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </>
-  );
+  const userSignedIn = true;
+
+  <>
+    <StatusBar style="auto" />
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{
+        headerShown: false,
+      }}>
+        {userSignedIn ? (
+          <>
+            <Stack.Screen name="RestaurantOverview" component={RestaurantOverview} />
+            <Stack.Screen name="RestaurantDetails" component={RestaurantDetails} />
+          </>
+        ) : (
+          <Stack.Screen name="SignInScreen" component={SignInScreen} />
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  </>
 }
