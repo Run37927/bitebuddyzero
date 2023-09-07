@@ -3,12 +3,18 @@ import React from 'react'
 
 const ChatPage = () => {
     return (
-        <View>
-            <Text>ChatPage</Text>
+        <View style={styles.container}>
+            <Text>Chat Coming Soon</Text>
         </View>
     )
 }
 
 export default ChatPage
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
+})

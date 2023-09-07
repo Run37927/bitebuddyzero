@@ -8,7 +8,7 @@ export default () => {
         error: null,
     });
 
-    const searchRestaurants = async (term) => {
+    const searchRestaurants = async (term, { latitude, longitude }) => {
         setResults({
             data: null,
             loading: true,
@@ -20,7 +20,8 @@ export default () => {
                 params: {
                     limit: 10,
                     term,
-                    location: "Vancouver"
+                    latitude,
+                    longitude,
                 }
             })
             setResults({

@@ -46,21 +46,24 @@ function RestaurantOverview() {
 export default function App() {
   const userSignedIn = true;
 
-  <>
-    <StatusBar style="auto" />
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{
-        headerShown: false,
-      }}>
-        {userSignedIn ? (
-          <>
-            <Stack.Screen name="RestaurantOverview" component={RestaurantOverview} />
-            <Stack.Screen name="RestaurantDetails" component={RestaurantDetails} />
-          </>
-        ) : (
-          <Stack.Screen name="SignInScreen" component={SignInScreen} />
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
-  </>
+  return (
+    <>
+      <StatusBar style="auto" />
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{
+          headerShown: false,
+        }}>
+          {userSignedIn ? (
+            <>
+              <Stack.Screen name="RestaurantOverview" component={RestaurantOverview} />
+              <Stack.Screen name="RestaurantDetails" component={RestaurantDetails} />
+            </>
+          ) : (
+            <Stack.Screen name="SignInScreen" component={SignInScreen} />
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
+
+  )
 }

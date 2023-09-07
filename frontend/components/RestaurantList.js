@@ -1,14 +1,34 @@
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, Text, View, Alert } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import useRestaurants from '../hooks/useRestaurants'
 import RestaurantCard from './RestaurantCard';
+import * as Location from 'expo-location';
+
 
 const RestaurantList = ({ term }) => {
     const [{ data, loading, error }, searchRestaurants] = useRestaurants();
 
+    const getLocation = async () => {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('Unknown Location!', 'You need to grant location to use the app')
+            return;
+        }
+        const location = await Location.getCurrentPositionAsync({});
+
+        return {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude
+        }
+    }
+
     useLayoutEffect(() => {
-        searchRestaurants(term)
-    }, [term])
+        const fetchData = async () => {
+            const { latitude, longitude } = await getLocation();
+            searchRestaurants(term, { latitude, longitude });
+        };
+        fetchData();
+    }, [term]);
 
     // console.log({ data: data, loading, error })
 
