@@ -1,9 +1,10 @@
-import { ActivityIndicator, FlatList, StyleSheet, Text, View, Image, SafeAreaView, Dimensions, ScrollView } from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, Text, View, Image, SafeAreaView, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useLayoutEffect } from 'react'
 import useRestaurant from '../hooks/useRestaurant';
 import { Ionicons } from '@expo/vector-icons'
 import { elevation } from '../common/styles';
 import useReviews from '../hooks/useReviews';
+import { useNavigation } from '@react-navigation/native'
 
 const { width } = Dimensions.get('window');
 
@@ -56,13 +57,15 @@ const normalizeRestaurantData = (rawData) => {
 }
 
 const DetailsSection = ({ details }) => {
+    const navigation = useNavigation();
+
     const currentDate = new Date();
     const currentHour = currentDate.getHours();
     const currentMinute = currentDate.getMinutes();
 
     let nextTimeSlots = [];
 
-    // Generate the next 3 time slots, each 30min apart
+    // Generate the next 5 time slots, each 30min apart
     for (let i = 0; i < 5; i++) {
         const nextDate = new Date(currentDate);
         nextDate.setMinutes(currentMinute + (i * 30));
@@ -79,6 +82,13 @@ const DetailsSection = ({ details }) => {
     // console.log("Current Time:", `${currentHour}:${currentMinute}`);
     // console.log("Next Time Slots:", nextTimeSlots);
 
+    const renderTimeSlots = ({ item }) => {
+        return (
+            <TouchableOpacity onPress={() => navigation.navigate('ShowMatchesModal')}>
+                <Text style={styles.clockTime}>{item}</Text>
+            </TouchableOpacity>
+        )
+    }
     return (
         <View style={styles.detailContainer}>
             <Text style={styles.title}>{details.name} - {details.city}</Text>
@@ -108,7 +118,8 @@ const DetailsSection = ({ details }) => {
 
             <FlatList
                 data={nextTimeSlots}
-                renderItem={({ item }) => <Text style={styles.clockTime}>{item}</Text>}
+                renderItem={renderTimeSlots}
+                keyExtractor={(item) => item}
                 style={styles.bookingTime} horizontal={true} showsHorizontalScrollIndicator={false}
             />
             {/* <Image style={styles.image} source={require("../assets/img/map.png")} /> */}
