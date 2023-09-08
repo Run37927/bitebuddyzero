@@ -12,7 +12,10 @@ const RestaurantList = ({ term }) => {
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
             Alert.alert('Unknown Location!', 'You need to grant location to use the app')
-            return;
+            return {
+                latitude: 49.2827,
+                longitude: -123.1207
+            };
         }
         const location = await Location.getCurrentPositionAsync({});
 
