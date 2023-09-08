@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, FlatList } from 'react-native'
+import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { elevation } from '../common/styles'
 import { Ionicons } from '@expo/vector-icons'
@@ -74,9 +74,7 @@ const UserProfile = () => {
             <View style={styles.userIntroContainer}>
                 <Text style={styles.userIntro}>I am a very good bite buddy. I love exploring new restaurants and enjoy the experiences of meeting new people through food! Become my next bite buddy and let's eat eat eat coz I'm hungry.</Text>
             </View>
-
             <View style={styles.emptyDiv}></View>
-
             <View>
                 <Text style={{ fontWeight: 'bold', fontSize: 20, paddingHorizontal: 30 }}>What other bite buddies are saying about Emily</Text>
             </View>
@@ -89,6 +87,13 @@ const UserProfile = () => {
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                 />
+            </View>
+
+            <View style={styles.stickyBottomDiv}>
+                <Text>Wednesday - Sep 26 @ 7:00 PM</Text>
+                <TouchableOpacity style={styles.stickyBottomTextContainer}>
+                    <Text style={styles.stickyBottomText}>Request</Text>
+                </TouchableOpacity>
             </View>
         </View>
     )
@@ -169,5 +174,28 @@ const styles = StyleSheet.create({
     reviewerProfilePic: {
         width: 30,
         height: 30,
-    }
+    },
+    stickyBottomDiv: {
+        flexDirection: 'row',
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        backgroundColor: 'white',
+        padding: 16,
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    stickyBottomTextContainer: {
+        width: 100,
+        height: 50,
+        borderRadius: 20,
+        backgroundColor: '#FFA500',
+        justifyContent: 'center',
+    },
+    stickyBottomText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
 })
