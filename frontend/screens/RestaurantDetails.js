@@ -107,11 +107,11 @@ const DetailsSection = ({ details }) => {
                         </View>
                     ) : (
                         <View style={elevation}>
-                            <Text style={styles.openText}>Closed😭 - Come back tomorrow</Text>
+                            <Text style={styles.openText}>Open Now🤩</Text>
                         </View>
                     ) : (
                         <View style={elevation}>
-                            <Text style={styles.openText}>Open Now🤩</Text>
+                            <Text style={styles.openText}>Closed😭 - Come back tomorrow</Text>
                         </View>
                     )}
             </View>

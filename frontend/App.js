@@ -60,7 +60,10 @@ export default function App() {
               <Stack.Group>
                 <Stack.Screen name="RestaurantOverview" component={RestaurantOverview} />
                 <Stack.Screen name="RestaurantDetails" component={RestaurantDetails} />
-                <Stack.Screen name="UserProfile" component={UserProfile} />
+                <Stack.Screen name="UserProfile" component={UserProfile} options={{
+                  headerShown: true,
+                  title: ''
+                }} />
               </Stack.Group>
               <Stack.Group screenOptions={{ presentation: 'modal' }}>
                 <Stack.Screen name="ShowMatchesModal" component={ShowMatchesModal} />
