@@ -10,6 +10,7 @@ import ChatPage from './screens/ChatPage';
 import RequestPage from './screens/RequestPage';
 import SignInScreen from './screens/SignInScreen';
 import ShowMatchesModal from './screens/ShowMatchesModal';
+import UserProfile from './screens/UserProfile';
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -59,6 +60,7 @@ export default function App() {
               <Stack.Group>
                 <Stack.Screen name="RestaurantOverview" component={RestaurantOverview} />
                 <Stack.Screen name="RestaurantDetails" component={RestaurantDetails} />
+                <Stack.Screen name="UserProfile" component={UserProfile} />
               </Stack.Group>
               <Stack.Group screenOptions={{ presentation: 'modal' }}>
                 <Stack.Screen name="ShowMatchesModal" component={ShowMatchesModal} />

@@ -45,13 +45,16 @@ const dummyUsers = [
 const ShowMatchesModal = ({ navigation }) => {
     const renderUsers = ({ item }) => {
         return (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+                navigation.goBack();
+                navigation.navigate('UserProfile');
+            }}>
                 <View style={styles.userContainer}>
                     <Image style={styles.userProfilePic} source={item.profilePic} />
 
-                    <View>
+                    <View style={{ maxWidth: '90%' }}>
                         <Text style={styles.userName}>{item.name}</Text>
-                        <Text>{item.description}</Text>
+                        <Text style={{ marginRight: 12 }}>{item.description}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -62,7 +65,9 @@ const ShowMatchesModal = ({ navigation }) => {
             <Ionicons onPress={() => navigation.goBack()} style={styles.backBtn} name="close" size={25} color='#FFA500' />
             <View style={[styles.matchesContainer, elevation]}>
                 <Image style={styles.confetti} source={require('../assets/confetti.png')} />
-                <Text style={styles.title}>Great! These people selected this place at this time as well!</Text>
+                <View>
+                    <Text style={styles.title}>Great! These people selected this place at this time as well!</Text>
+                </View>
 
                 <View style={{ flex: 1, paddingHorizontal: 14, marginVertical: 20 }}>
                     <FlatList
@@ -106,17 +111,17 @@ const styles = StyleSheet.create({
     },
     title: {
         fontWeight: 'bold',
-        fontSize: 24,
+        fontSize: 20,
+        textAlign: 'center',
     },
     userContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 12,
         padding: 8,
-        marginBottom: 6,
+        marginBottom: 8,
         backgroundColor: '#F5F5F5',
         borderRadius: 20,
-
     },
     userProfilePic: {
         width: 40,
@@ -124,6 +129,6 @@ const styles = StyleSheet.create({
     },
     userName: {
         fontWeight: 'bold',
-        fontSize: 20
-    }
+        fontSize: 16
+    },
 })
