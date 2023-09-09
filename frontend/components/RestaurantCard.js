@@ -27,6 +27,13 @@ const RestaurantCard = ({ id, name, location, rating, price, imageUrl }) => {
                         <Text style={styles.rating}>{rating}</Text>
                         <Text style={styles.price}>{price}</Text>
                     </View>
+
+                    <View style={styles.interestedUsersContainer}>
+                        <View style={styles.interestedUser}></View>
+                        <View style={[styles.interestedUser, { position: 'absolute', left: 14 }]}></View>
+                        <View style={[styles.interestedUser, { position: 'absolute', left: 28 }]}></View>
+                        <Text style={{ position: 'absolute', left: 50 }}>12 ppl interested👀</Text>
+                    </View>
                 </View>
             </View>
         </TouchableOpacity>
@@ -69,5 +76,19 @@ const styles = StyleSheet.create({
     },
     price: {
         color: "#FFA500"
+    },
+    interestedUsersContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'relative',
+        marginTop: 4,
+    },
+    interestedUser: {
+        width: 20,
+        height: 20,
+        borderWidth: 1,
+        borderColor: 'white',
+        backgroundColor: '#dedcdc',
+        borderRadius: 10
     }
 })

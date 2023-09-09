@@ -11,6 +11,7 @@ import RequestPage from './screens/RequestPage';
 import SignInScreen from './screens/SignInScreen';
 import ShowMatchesModal from './screens/ShowMatchesModal';
 import UserProfile from './screens/UserProfile';
+import BuddyConfirmModal from './screens/BuddyConfirmModal';
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -67,6 +68,7 @@ export default function App() {
               </Stack.Group>
               <Stack.Group screenOptions={{ presentation: 'modal' }}>
                 <Stack.Screen name="ShowMatchesModal" component={ShowMatchesModal} />
+                <Stack.Screen name="BuddyConfirmModal" component={BuddyConfirmModal} />
               </Stack.Group>
             </>
           ) : (

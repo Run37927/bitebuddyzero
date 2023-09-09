@@ -169,8 +169,6 @@ const ReviewsSection = ({ allReviews }) => {
             <View style={[styles.eachReview, elevation]}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <View style={styles.smallContainer}>
-                        {/* <Ionicons name="star" size={20} color='#FFA500' />
-                        <Text>{item.rating}</Text> */}
                         {renderStars(item.rating)}
                     </View>
                     <Text style={{ fontSize: 12 }}>{item.time_created.split(' ')[0]}</Text>

@@ -11,7 +11,7 @@ const RestaurantList = ({ term }) => {
     const getLocation = async () => {
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
-            Alert.alert('Unknown Location!', 'You need to grant location to use the app')
+            Alert.alert('Location permission rejected', 'Will defualt to Vancouver')
             return {
                 latitude: 49.2827,
                 longitude: -123.1207
@@ -56,12 +56,16 @@ const RestaurantList = ({ term }) => {
     }
 
     return (
-        <FlatList
-            data={data}
-            keyExtractor={(item) => item.id}
-            renderItem={renderRestaurantCard}
-            showsVerticalScrollIndicator={false}
-        />
+        <>
+            {data && (
+                <FlatList
+                    data={data}
+                    keyExtractor={(item) => item.id}
+                    renderItem={renderRestaurantCard}
+                    showsVerticalScrollIndicator={false}
+                />
+            )}
+        </>
     )
 }
 

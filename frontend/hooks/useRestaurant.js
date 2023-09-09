@@ -4,7 +4,7 @@ import yelp from "../api/yelp";
 export default () => {
     const [result, setResult] = useState({
         data: null,
-        isLoading: false,
+        loading: false,
         error: null,
     });
 
@@ -23,10 +23,11 @@ export default () => {
                 error: null,
             })
         } catch (error) {
+            console.log("API Error: ", error);
             setResult({
                 data: null,
                 loading: false,
-                error: error,
+                error: error.message,
             })
         }
     }

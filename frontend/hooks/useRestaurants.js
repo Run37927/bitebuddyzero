@@ -4,7 +4,7 @@ import yelp from "../api/yelp";
 export default () => {
     const [results, setResults] = useState({
         data: null,
-        isLoading: false,
+        loading: false,
         error: null,
     });
 
@@ -24,16 +24,18 @@ export default () => {
                     longitude,
                 }
             })
+            console.log("API Response: ", response);
             setResults({
                 data: response.data.businesses,
                 loading: false,
                 error: null,
             })
         } catch (error) {
+            console.log("API Error: ", error);
             setResults({
                 data: null,
                 loading: false,
-                error: error,
+                error: error.message,
             })
         }
     }
