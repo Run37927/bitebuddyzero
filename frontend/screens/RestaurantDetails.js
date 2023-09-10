@@ -1,4 +1,4 @@
-import { ActivityIndicator, FlatList, Button, StyleSheet, Text, View, Image, Dimensions, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, Alert, FlatList, Button, StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, Platform } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import useRestaurant from '../hooks/useRestaurant';
 import { Ionicons } from '@expo/vector-icons'
@@ -75,6 +75,16 @@ const DetailsSection = ({ details }) => {
     // handler for android
     const handleDateTimePickerChangeAndroid = (event, selectedDate) => {
         const pickedDate = selectedDate;
+
+        // don't allow user pick a time earlier than current time
+        const currentTime = new Date();
+        const pickedTime = pickedDate.getHours() * 60 + pickedDate.getMinutes();
+        const currentTimeValue = currentTime.getHours() * 60 + currentTime.getMinutes();
+
+        if (pickedTime < currentTimeValue) {
+            Alert.alert("Invalid Time", "Can't pick a time in the past");
+            return;
+        }
         setDate(pickedDate);
     }
 
@@ -99,7 +109,6 @@ const DetailsSection = ({ details }) => {
             <Text style={styles.title}>{details.name} - {details.city}</Text>
 
             <View style={styles.ratingAndTime}>
-
                 <View style={styles.smallContainer}>
                     <Ionicons name="star" size={20} color='#FFA500' />
                     <Text>{details.rating}</Text>
@@ -123,8 +132,8 @@ const DetailsSection = ({ details }) => {
 
             {/* datetime picker start */}
             <View style={styles.dateTimePickerBtnsContainer}>
-                <View style={Platform.OS === 'ios' ? styles.dateTimeButton : null}>
-                    <Button onPress={showTimePicker} title="Pick a time" color="white" accessibilityLabel="Pick a time" />
+                <View style={Platform.OS === 'ios' ? styles.dateTimeButton : styles.dateTimeButtonAndroid}>
+                    <Button onPress={showTimePicker} title="Pick a time" color={Platform.OS === 'android' ? '#FFA500' : 'white'} accessibilityLabel="Pick a time" />
                 </View>
             </View>
 
@@ -320,5 +329,8 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 12,
         backgroundColor: '#FFA500',
+    },
+    dateTimeButtonAndroid: {
+        height: 40,
     }
 })
