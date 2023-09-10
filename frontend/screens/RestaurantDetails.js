@@ -1,10 +1,12 @@
-import { ActivityIndicator, FlatList, StyleSheet, Text, View, Image, Dimensions, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, FlatList, Button, StyleSheet, Text, View, Image, Dimensions, TouchableOpacity } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import useRestaurant from '../hooks/useRestaurant';
 import { Ionicons } from '@expo/vector-icons'
 import { elevation } from '../common/styles';
 import useReviews from '../hooks/useReviews';
 import { useNavigation } from '@react-navigation/native'
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
 const { width } = Dimensions.get('window');
 
@@ -59,36 +61,39 @@ const normalizeRestaurantData = (rawData) => {
 const DetailsSection = ({ details }) => {
     const navigation = useNavigation();
 
-    const currentDate = new Date();
-    const currentHour = currentDate.getHours();
-    const currentMinute = currentDate.getMinutes();
+    const [showPicker, setShowPicker] = useState(false);
+    const [date, setDate] = useState(new Date());
+    const [mode, setMode] = useState('date');
 
-    let nextTimeSlots = [];
+    // handler for ios: once user picked a date, set to that date, and hide the picker
+    const handleDateTimePickerChange = (event, selectedDate) => {
+        const pickedDate = selectedDate;
+        setDate(pickedDate);
+        setShowPicker(false);
+    };
 
-    // Generate the next 5 time slots, each 30min apart
-    for (let i = 0; i < 5; i++) {
-        const nextDate = new Date(currentDate);
-        nextDate.setMinutes(currentMinute + (i * 30));
-
-        // Format the time slot as HH:MM AM/PM
-        const hours = nextDate.getHours() % 12 || 12;
-        const minutes = nextDate.getMinutes();
-        const ampm = nextDate.getHours() >= 12 ? 'PM' : 'AM';
-        const timeString = `${hours}:${minutes < 10 ? '0' + minutes : minutes} ${ampm}`;
-
-        nextTimeSlots.push(timeString);
+    // handler for android
+    const handleDateTimePickerChangeAndroid = (event, selectedDate) => {
+        const pickedDate = selectedDate;
+        setDate(pickedDate);
     }
 
-    // console.log("Current Time:", `${currentHour}:${currentMinute}`);
-    // console.log("Next Time Slots:", nextTimeSlots);
-
-    const renderTimeSlots = ({ item }) => {
-        return (
-            <TouchableOpacity onPress={() => navigation.navigate('ShowMatchesModal')}>
-                <Text style={styles.clockTime}>{item}</Text>
-            </TouchableOpacity>
-        )
-    }
+    const showMode = (currentMode) => {
+        if (Platform.OS === 'android') {
+            DateTimePickerAndroid.open({
+                value: date,
+                onChange: handleDateTimePickerChangeAndroid,
+                mode: currentMode,
+                is24Hour: true,
+            });
+        } else {
+            setShowPicker(true);
+            setMode(currentMode);
+        }
+    };
+    const showTimePicker = () => {
+        showMode('time');
+    };
     return (
         <View style={styles.detailContainer}>
             <Text style={styles.title}>{details.name} - {details.city}</Text>
@@ -116,12 +121,27 @@ const DetailsSection = ({ details }) => {
                     )}
             </View>
 
-            <FlatList
-                data={nextTimeSlots}
-                renderItem={renderTimeSlots}
-                keyExtractor={(item) => item}
-                style={styles.bookingTime} horizontal={true} showsHorizontalScrollIndicator={false}
-            />
+            {/* datetime picker start */}
+            <View style={styles.dateTimePickerBtnsContainer}>
+                <View style={Platform.OS === 'ios' ? styles.dateTimeButton : null}>
+                    <Button onPress={showTimePicker} title="Pick a time" color="white" accessibilityLabel="Pick a time" />
+                </View>
+            </View>
+
+            <Text style={{ color: 'red' }}>selected date: {date.toLocaleString()}</Text>
+
+            {showPicker && Platform.OS === "ios" && (
+                <DateTimePicker
+                    testID='dateTimePicker'
+                    value={date}
+                    mode={mode}
+                    is24Hour={true}
+                    onChange={handleDateTimePickerChange}
+                    minimumDate={new Date()}
+                />
+            )}
+            {/* datetime picker end */}
+
 
             <View>
                 <Text style={styles.title}>Details</Text>
@@ -268,12 +288,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    clockTime: {
-        backgroundColor: '#FFA500',
-        marginHorizontal: 6,
-        padding: 8,
-        borderRadius: 12,
-    },
     bookingTime: {
         flexDirection: 'row',
         marginTop: 10,
@@ -297,5 +311,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 14,
         marginBottom: 12,
+    },
+    dateTimePickerBtnsContainer: {
+        justifyContent: 'center',
+        paddingVertical: 10,
+    },
+    dateTimeButton: {
+        height: 40,
+        borderRadius: 12,
+        backgroundColor: '#FFA500',
     }
 })
