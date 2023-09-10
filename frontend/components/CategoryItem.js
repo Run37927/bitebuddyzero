@@ -20,7 +20,7 @@ export default CategoryItem
 const styles = StyleSheet.create({
     container: {
         width: 75,
-        height: 100,
+        height: 90,
         marginVertical: 16,
         alignItems: 'center',
         justifyContent: 'center',

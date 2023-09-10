@@ -18,10 +18,10 @@ const styles = StyleSheet.create({
         marginHorizontal: 25,
     },
     lightHeader: {
-        fontSize: 36,
+        fontSize: 32,
     },
     boldHeader: {
-        fontSize: 36,
+        fontSize: 32,
         fontWeight: 'bold',
     }
 })

@@ -16,23 +16,25 @@ const RestaurantCard = ({ id, name, location, rating, price, imageUrl }) => {
 
     return (
         <TouchableOpacity onPress={showRestaurantDetails}>
-            <View style={[styles.container, elevation]}>
-                <Image style={styles.image} source={{ uri: imageUrl }} />
+            <View style={styles.container}>
+                <Image style={styles.image} source={{ uri: imageUrl }} resizeMode='cover' />
 
                 <View style={styles.infoContainer}>
-                    <Text style={styles.header}>{name}</Text>
-
-                    <View style={styles.info}>
-                        <Ionicons name="star" size={20} color='#FFA500' />
-                        <Text style={styles.rating}>{rating}</Text>
-                        <Text style={styles.price}>{price}</Text>
+                    <View style={styles.nameAndInfo}>
+                        <Text style={styles.header}>{name}</Text>
+                        <View style={styles.info}>
+                            <Ionicons name="star" size={20} color='#FFA500' />
+                            <Text style={styles.rating}>{rating}</Text>
+                            <Text style={styles.price}>{price}</Text>
+                        </View>
                     </View>
+
 
                     <View style={styles.interestedUsersContainer}>
                         <View style={styles.interestedUser}></View>
                         <View style={[styles.interestedUser, { position: 'absolute', left: 14 }]}></View>
                         <View style={[styles.interestedUser, { position: 'absolute', left: 28 }]}></View>
-                        <Text style={{ position: 'absolute', left: 50 }}>12 ppl interested👀</Text>
+                        <Text style={{ position: 'absolute', left: 50 }}>12 ppl want to go here👀</Text>
                     </View>
                 </View>
             </View>
@@ -45,25 +47,26 @@ export default RestaurantCard
 const styles = StyleSheet.create({
     container: {
         minHeight: 100,
-        alignSelf: "stretch",
         marginVertical: 10,
-        flexDirection: 'row',
         alignItems: 'center'
     },
     image: {
-        width: 75,
-        height: 75,
-        borderRadius: 50,
-        marginLeft: 10,
+        width: '90%',
+        height: 160,
+        borderRadius: 20,
     },
     infoContainer: {
         flex: 1,
-        paddingHorizontal: 10,
+        width: '90%',
+    },
+    nameAndInfo: {
+        flexDirection: 'row',
+        marginVertical: 6,
+        justifyContent: 'space-between',
     },
     header: {
         fontWeight: 'bold',
         fontSize: 18,
-        marginBottom: 4,
     },
     info: {
         flexDirection: 'row',
@@ -71,7 +74,7 @@ const styles = StyleSheet.create({
     },
     rating: {
         marginLeft: 6,
-        marginRight: 20,
+        marginRight: 6,
         fontSize: 16,
     },
     price: {
@@ -81,7 +84,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         position: 'relative',
-        marginTop: 4,
     },
     interestedUser: {
         width: 20,
