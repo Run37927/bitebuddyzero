@@ -1,19 +1,30 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
 
 const BuddyConfirmModal = ({ navigation }) => {
+
+    const handleCancelRequest = () => {
+        Alert.alert('Cancel request', 'Are you sure you want to cancel this bitebuddy request?', [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('cancel pressed'),
+                style: 'cancel'
+            },
+            { text: "OK", onPress: () => navigation.goBack(), style: 'ok' }
+        ])
+    }
     return (
-        <View style={styles.rootContainer}>
+        <ScrollView style={styles.rootContainer}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Text>Cancel</Text>
+                <Text style={{ fontWeight: '600' }}>Done</Text>
             </TouchableOpacity>
 
             <View style={styles.requestDetailContainer}>
                 <Text style={styles.restaurantTitle}>Boba Bliss - Mountain View</Text>
 
                 <View style={styles.iconAndTitle}>
-                    <Ionicons name="calendar" size={30} color='black' />
+                    <Ionicons name="calendar-outline" size={30} color='black' />
                     <Text>Monday, August 21</Text>
                 </View>
 
@@ -23,26 +34,37 @@ const BuddyConfirmModal = ({ navigation }) => {
                 </View>
 
                 <View style={styles.iconAndTitle}>
-                    <Ionicons name="person" size={30} color='black' />
+                    <Ionicons name="person-circle-outline" size={30} color='black' />
                     <Text>With Emily Ganbold</Text>
+                </View>
+
+                <View style={styles.iconAndTitle}>
+                    <Ionicons name="checkmark-circle-outline" size={30} color='green' />
+                    <Text>BiteBuddy request sent</Text>
                 </View>
             </View>
 
             <View style={styles.divider} />
 
-            <View style={styles.safetyInfo}>
+            <View style={styles.safetyInfoContainer}>
                 <Text style={styles.safetyTitle}>What to know before you go</Text>
-                <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium culpa atque, a facilis qui incidunt vitae, placeat rerum iure porro ab dicta consequatur tempora esse ex? Repellendus aliquam laudantium corporis corrupti odit necessitatibus, dolore error! Sunt tempore sequi maxime ipsa corrupti quasi, fugit eos sapiente? Autem non reiciendis at quod ratione, doloribus odio minima, eveniet assumenda rem eos, rerum delectus quaerat labore nihil quia reprehenderit cum. Sapiente similique quasi eaque
-                </Text>
+                <View style={styles.safetyContentContainer}>
+                    <Text>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium culpa atque, a facilis qui incidunt vitae, placeat rerum iure porro ab dicta consequatur tempora esse ex? Repellendus aliquam laudantium corporis corrupti odit necessitatibus, dolore error! Sunt tempore sequi maxime ipsa corrupti quasi, fugit eos sapiente? Autem non reiciendis at quod ratione, doloribus odio minima, eveniet assumenda rem eos, rerum delectus quaerat labore nihil quia reprehenderit cum. Sapiente similique quasi eaque
+                    </Text>
+                </View>
             </View>
 
             <View style={styles.divider} />
 
-            <TouchableOpacity style={styles.confirmBtn}>
-                <Text style={styles.confirmText}>Confirm</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('ChatPage')} style={styles.sendMsgBtn}>
+                <Text style={styles.sendMsg}>Send Message</Text>
             </TouchableOpacity>
-        </View>
+
+            <TouchableOpacity onPress={handleCancelRequest} style={styles.cancelBtn}>
+                <Text style={styles.cancelRequestText}>Cancel Request</Text>
+            </TouchableOpacity>
+        </ScrollView>
     )
 }
 
@@ -73,23 +95,35 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
-    safetyInfo: {
-
-    },
     safetyTitle: {
         fontWeight: '500',
         fontSize: 20,
     },
-    confirmBtn: {
+    safetyContentContainer: {
+        marginTop: 10,
+    },
+    sendMsgBtn: {
         width: '100%',
-        height: 40,
+        height: 45,
         borderRadius: 12,
         backgroundColor: '#FFA500',
         justifyContent: 'center',
+        marginBottom: 16,
     },
-    confirmText: {
-        color: 'white',
+    sendMsg: {
         textAlign: 'center',
-        fontSize: 16
+        fontSize: 18
+    },
+    cancelBtn: {
+        width: '100%',
+        height: 45,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        justifyContent: 'center',
+    },
+    cancelRequestText: {
+        textAlign: 'center',
+        fontSize: 18
     }
 })
