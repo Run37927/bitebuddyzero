@@ -1,5 +1,5 @@
-import { ActivityIndicator, FlatList, StyleSheet, Text, View, Image, SafeAreaView, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
-import React, { useLayoutEffect } from 'react'
+import { ActivityIndicator, FlatList, StyleSheet, Text, View, Image, Dimensions, TouchableOpacity } from 'react-native'
+import React, { useLayoutEffect, useState } from 'react'
 import useRestaurant from '../hooks/useRestaurant';
 import { Ionicons } from '@expo/vector-icons'
 import { elevation } from '../common/styles';
@@ -122,7 +122,6 @@ const DetailsSection = ({ details }) => {
                 keyExtractor={(item) => item}
                 style={styles.bookingTime} horizontal={true} showsHorizontalScrollIndicator={false}
             />
-            {/* <Image style={styles.image} source={require("../assets/img/map.png")} /> */}
 
             <View>
                 <Text style={styles.title}>Details</Text>
@@ -269,16 +268,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    bookingTime: {
-        flexDirection: 'row',
-        marginTop: 10,
-        marginBottom: 20,
-    },
     clockTime: {
         backgroundColor: '#FFA500',
         marginHorizontal: 6,
         padding: 8,
         borderRadius: 12,
+    },
+    bookingTime: {
+        flexDirection: 'row',
+        marginTop: 10,
+        marginBottom: 20,
     },
     openText: {
         textAlign: 'center',
