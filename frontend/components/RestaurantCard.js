@@ -3,7 +3,6 @@ import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 
-
 const RestaurantCard = ({ id, name, location, rating, price, imageUrl }) => {
     const navigation = useNavigation();
 
@@ -12,7 +11,6 @@ const RestaurantCard = ({ id, name, location, rating, price, imageUrl }) => {
             restaurantId: id,
         })
     }
-
     return (
         <TouchableOpacity onPress={showRestaurantDetails}>
             <View style={styles.container}>
@@ -20,7 +18,10 @@ const RestaurantCard = ({ id, name, location, rating, price, imageUrl }) => {
 
                 <View style={styles.infoContainer}>
                     <View style={styles.nameAndInfo}>
-                        <Text style={styles.header}>{name}</Text>
+                        <View style={styles.nameAndDistance}>
+                            <Text style={styles.header}>{name} · </Text>
+                            {/*TODO: <Text>0.6km</Text> */}
+                        </View>
                         <View style={styles.info}>
                             <Ionicons name="star" size={20} color='#FFA500' />
                             <Text style={styles.rating}>{rating}</Text>
@@ -63,9 +64,12 @@ const styles = StyleSheet.create({
         marginVertical: 6,
         justifyContent: 'space-between',
     },
+    nameAndDistance: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     header: {
-        fontWeight: 'bold',
-        fontSize: 18,
+        fontSize: 16,
     },
     info: {
         flexDirection: 'row',

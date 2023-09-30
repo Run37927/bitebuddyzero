@@ -4,8 +4,9 @@ import useRestaurants from '../hooks/useRestaurants'
 import RestaurantCard from './RestaurantCard';
 import * as Location from 'expo-location';
 
-
 const RestaurantList = ({ term }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentLocation, setCurrentLocation] = useState(null);
     const [{ data, loading, error }, searchRestaurants] = useRestaurants();
 
     const getLocation = async () => {
@@ -27,13 +28,14 @@ const RestaurantList = ({ term }) => {
 
     useLayoutEffect(() => {
         const fetchData = async () => {
-            const { latitude, longitude } = await getLocation();
-            searchRestaurants(term, { latitude, longitude });
+            const location = await getLocation();
+            setCurrentLocation(location);
+            await searchRestaurants(term, currentPage, location);
         };
         fetchData();
-    }, [term]);
+    }, [term, currentPage]);
 
-    // console.log({ data: data, loading, error })
+    console.log({ data: data, loading, error })
 
     if (loading) return <ActivityIndicator size="large" marginVertical={30} />
     if (error) return (
@@ -63,6 +65,8 @@ const RestaurantList = ({ term }) => {
                     keyExtractor={(item) => item.id}
                     renderItem={renderRestaurantCard}
                     showsVerticalScrollIndicator={false}
+                    onEndReached={() => setCurrentPage(prev => prev + 1)}
+                    onEndReachedThreshold={0.01}
                 />
             )}
         </>

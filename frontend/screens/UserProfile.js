@@ -93,7 +93,7 @@ const UserProfile = ({ navigation }) => {
             <View style={styles.stickyBottomDiv}>
                 <Text>Wednesday - Sep 26 @ 7:00 PM</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('BuddyConfirmModal')} style={styles.stickyBottomTextContainer}>
-                    <Text style={styles.stickyBottomText}>Request</Text>
+                    <Text style={styles.stickyBottomText}>Invite</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     stickyBottomText: {
-        color: 'white',
+        color: '#000',
         fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',

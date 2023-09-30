@@ -9,7 +9,6 @@ import HomePage from './screens/HomePage';
 import ChatPage from './screens/ChatPage';
 import RequestPage from './screens/RequestPage';
 import SignInScreen from './screens/SignInScreen';
-import ShowMatchesModal from './screens/ShowMatchesModal';
 import UserProfile from './screens/UserProfile';
 import BuddyConfirmModal from './screens/BuddyConfirmModal';
 
@@ -34,8 +33,8 @@ function RestaurantOverview() {
       tabBarIcon: ({ color, size }) => <Ionicons name="chatbubbles" size={size} color={color} />
     }} />
     <BottomTabs.Screen name="RequestPage" component={RequestPage} options={{
-      title: 'Requests',
-      tabBarLabel: 'Requests',
+      title: 'Invites',
+      tabBarLabel: 'Invites',
       tabBarIcon: ({ color, size }) => <Ionicons name="heart" size={size} color={color} />
     }} />
     <BottomTabs.Screen name="UserAccount" component={UserAccount} options={{
@@ -47,7 +46,7 @@ function RestaurantOverview() {
 }
 
 export default function App() {
-  const userSignedIn = true;
+  const userSignedIn = false;
 
   return (
     <>
@@ -67,7 +66,6 @@ export default function App() {
                 }} />
               </Stack.Group>
               <Stack.Group screenOptions={{ presentation: 'modal' }}>
-                <Stack.Screen name="ShowMatchesModal" component={ShowMatchesModal} />
                 <Stack.Screen name="BuddyConfirmModal" component={BuddyConfirmModal} />
               </Stack.Group>
             </>

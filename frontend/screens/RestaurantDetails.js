@@ -1,12 +1,13 @@
-import { ActivityIndicator, Alert, FlatList, Button, StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, Platform } from 'react-native'
+import { ActivityIndicator, Alert, FlatList, Button, StyleSheet, Text, View, Image, Dimensions, TouchableOpacity, Platform, ScrollView } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import useRestaurant from '../hooks/useRestaurant';
 import { Ionicons } from '@expo/vector-icons'
-import { elevation } from '../common/styles';
+import { elevation, surprise } from '../common/styles';
 import useReviews from '../hooks/useReviews';
 import { useNavigation } from '@react-navigation/native'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import ShowPotentialMatches from '../components/ShowPotentialMatches';
 
 const { width } = Dimensions.get('window');
 
@@ -22,7 +23,9 @@ const PhotoSlider = ({ photos, navigation }) => {
 
     return (
         <View>
-            <Ionicons onPress={() => navigation.goBack()} style={styles.backBtn} name="close" size={25} color='#FFA500' />
+            <View style={styles.backBtnContainer}>
+                <Ionicons onPress={() => navigation.goBack()} name="close" size={28} color='#FFA500' />
+            </View>
             <FlatList
                 data={photos}
                 keyExtractor={(item) => item}
@@ -58,18 +61,21 @@ const normalizeRestaurantData = (rawData) => {
     };
 }
 
-const DetailsSection = ({ details }) => {
+const DetailsSection = ({ details, setHasPotentialMatches, hasPotentialMatches }) => {
     const navigation = useNavigation();
 
     const [showPicker, setShowPicker] = useState(false);
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
+    const [hasSelectedDateTime, setHasSelectedDateTime] = useState(false);
 
     // handler for ios: once user picked a date, set to that date, and hide the picker
     const handleDateTimePickerChange = (event, selectedDate) => {
         const pickedDate = selectedDate;
         setDate(pickedDate);
         setShowPicker(false);
+        setHasPotentialMatches(true);
+        setHasSelectedDateTime(true);
     };
 
     // handler for android
@@ -86,20 +92,36 @@ const DetailsSection = ({ details }) => {
             return;
         }
         setDate(pickedDate);
+        setHasPotentialMatches(true);
+        setHasSelectedDateTime(true);
     }
 
     const showMode = (currentMode) => {
         if (Platform.OS === 'android') {
-            DateTimePickerAndroid.open({
-                value: date,
-                onChange: handleDateTimePickerChangeAndroid,
-                mode: currentMode,
-                is24Hour: true,
-            });
+            if (currentMode === 'date') {
+                DateTimePickerAndroid.open({
+                    value: date,
+                    onChange: handleDateTimePickerChangeAndroid,
+                    mode: currentMode,
+                    is24Hour: true,
+                    minimumDate: date,
+                });
+            } else {
+                DateTimePickerAndroid.open({
+                    value: date,
+                    onChange: handleDateTimePickerChangeAndroid,
+                    mode: currentMode,
+                    is24Hour: true,
+                });
+            }
         } else {
             setShowPicker(true);
             setMode(currentMode);
         }
+    };
+
+    const showDatePicker = () => {
+        showMode('date');
     };
     const showTimePicker = () => {
         showMode('time');
@@ -125,19 +147,32 @@ const DetailsSection = ({ details }) => {
                         </View>
                     ) : (
                         <View style={elevation}>
-                            <Text style={styles.openText}>Closed😭 - Come back tomorrow</Text>
+                            <Text style={styles.openText}>Closed😭 - Come back later</Text>
                         </View>
                     )}
+            </View>
+
+            <View style={styles.phoneAddressContainer}>
+                <View style={styles.smallContainer}>
+                    <Ionicons name="call" size={20} color='black' />
+                    <Text>{details.phone}</Text>
+                </View>
+
+                <View style={styles.smallContainer}>
+                    <Ionicons name="pin" size={20} color='black' />
+                    <Text>{details.address.join(', ')}</Text>
+                </View>
             </View>
 
             {/* datetime picker start */}
             <View style={styles.dateTimePickerBtnsContainer}>
                 <View style={Platform.OS === 'ios' ? styles.dateTimeButton : styles.dateTimeButtonAndroid}>
-                    <Button onPress={showTimePicker} title="Pick a time" color={Platform.OS === 'android' ? '#FFA500' : 'white'} accessibilityLabel="Pick a time" />
+                    <Button onPress={showDatePicker} title="PICK A DATE" color='#FFA500' accessibilityLabel="Pick a date" />
+                </View>
+                <View style={Platform.OS === 'ios' ? styles.dateTimeButton : styles.dateTimeButtonAndroid}>
+                    <Button onPress={showTimePicker} title="PICK A TIME" color='#FFA500' accessibilityLabel="Pick a time" />
                 </View>
             </View>
-
-            <Text style={{ color: 'red' }}>selected date: {date.toLocaleString()}</Text>
 
             {showPicker && Platform.OS === "ios" && (
                 <DateTimePicker
@@ -149,22 +184,31 @@ const DetailsSection = ({ details }) => {
                     minimumDate={new Date()}
                 />
             )}
+
+            {hasSelectedDateTime ? (
+                hasPotentialMatches ? (
+                    <>
+                        <View style={[surprise, styles.selectedDateTimeContainer]}>
+                            <Text style={styles.selectedDateTime}>Check out these people who also picked {date.toLocaleDateString([], { dateStyle: 'short' })
+                            } around {date.toLocaleTimeString([], {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                            })}👀</Text>
+                        </View>
+                        <ShowPotentialMatches />
+                    </>
+                ) : (
+                    <View style={[surprise, styles.selectedDateTimeContainer]}>
+                        <Text style={styles.selectedDateTime}>
+                            Nobody picked this date and time yet, keep looking!
+                        </Text>
+                    </View>
+                )
+            ) : (
+                null
+            )}
+
             {/* datetime picker end */}
-
-
-            <View>
-                <Text style={styles.title}>Details</Text>
-
-                <View style={styles.smallContainer}>
-                    <Ionicons name="call" size={20} color='black' />
-                    <Text>{details.phone}</Text>
-                </View>
-
-                <View style={styles.smallContainer}>
-                    <Ionicons name="pin" size={20} color='black' />
-                    <Text>{details.address.join(', ')}</Text>
-                </View>
-            </View>
         </View>
     );
 };
@@ -192,32 +236,25 @@ const ReviewsSection = ({ allReviews }) => {
         return stars;
     };
 
-    const renderReviews = ({ item }) => {
-        return (
-            <View style={[styles.eachReview, elevation]}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <View style={styles.smallContainer}>
-                        {renderStars(item.rating)}
-                    </View>
-                    <Text style={{ fontSize: 12 }}>{item.time_created.split(' ')[0]}</Text>
-                </View>
-
-                <Text>{item.text}</Text>
-            </View>
-        )
-    }
-
     if (reviews && reviews.length) {
         return (
             <View style={styles.reviewSection}>
                 <Text style={styles.title}>Reviews</Text>
                 <View>
-                    <FlatList
-                        data={reviews}
-                        renderItem={renderReviews}
-                        keyExtractor={(item) => item.id}
-                        showsVerticalScrollIndicator={false}
-                    />
+                    {reviews.map((review) => {
+                        return (
+                            <View key={review.id} style={[styles.eachReview, elevation]}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <View style={styles.smallContainer}>
+                                        {renderStars(review.rating)}
+                                    </View>
+                                    <Text style={{ fontSize: 12 }}>{review.time_created.split(' ')[0]}</Text>
+                                </View>
+
+                                <Text>{review.text}</Text>
+                            </View>
+                        )
+                    })}
                 </View>
             </View>
         )
@@ -229,6 +266,8 @@ const RestaurantDetails = ({ route, navigation }) => {
     const resId = route.params.restaurantId;
     const [{ data, loading, error }, searchRestaurant] = useRestaurant();
     const [{ data: reviewsData, loading: loadingReviews, error: reviewError }, searchReviews] = useReviews();
+
+    const [hasPotentialMatches, setHasPotentialMatches] = useState(false);
 
     useLayoutEffect(() => {
         searchRestaurant(resId)
@@ -244,15 +283,16 @@ const RestaurantDetails = ({ route, navigation }) => {
     if (error || reviewError) return <Text>{error}</Text>;
 
     return (
-        <View style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1, paddingHorizontal: 12, }}>
             {data && (
                 <View style={{ flex: 1 }}>
                     <PhotoSlider photos={data.photos} navigation={navigation} />
-                    <DetailsSection details={normalizedData} />
+                    <DetailsSection details={normalizedData} setHasPotentialMatches={setHasPotentialMatches} hasPotentialMatches={hasPotentialMatches} />
+                    {/* {hasPotentialMatches && <ShowPotentialMatches />} */}
                     <ReviewsSection allReviews={reviewsData} />
                 </View>
             )}
-        </View>
+        </ScrollView>
     )
 }
 
@@ -271,16 +311,17 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 230,
     },
-    backBtn: {
+    backBtnContainer: {
         backgroundColor: 'white',
-        borderRadius: 50,
+        borderRadius: 14,
+        width: 28,
+        height: 28,
+        alignItems: 'center',
+        justifyContent: 'center',
         zIndex: 50,
         position: 'absolute',
-        top: 30,
+        top: 50,
         left: 30,
-    },
-    detailContainer: {
-        paddingHorizontal: 12,
     },
     title: {
         fontWeight: "bold",
@@ -322,15 +363,31 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     dateTimePickerBtnsContainer: {
-        justifyContent: 'center',
-        paddingVertical: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        paddingVertical: 4,
     },
     dateTimeButton: {
         height: 40,
         borderRadius: 12,
-        backgroundColor: '#FFA500',
+        backgroundColor: 'white',
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: '#FFA500'
     },
     dateTimeButtonAndroid: {
         height: 40,
+    },
+    phoneAddressContainer: {
+        paddingVertical: 10,
+    },
+    selectedDateTimeContainer: {
+        paddingHorizontal: 14,
+        paddingVertical: 8,
+        marginVertical: 10,
+    },
+    selectedDateTime: {
+        fontSize: 16,
+        fontWeight: 'bold',
     }
 })
