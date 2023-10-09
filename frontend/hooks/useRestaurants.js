@@ -10,7 +10,7 @@ export default () => {
 
     const searchRestaurants = async (term, currentPage, { latitude, longitude }) => {
         setResults(prevResults => ({
-            data: currentPage === 1 ? [] : prevResults.data,
+            data: prevResults.data,
             loading: true,
             error: null,
         }));

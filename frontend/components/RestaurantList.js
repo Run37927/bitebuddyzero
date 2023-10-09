@@ -8,6 +8,7 @@ const RestaurantList = ({ term }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [currentLocation, setCurrentLocation] = useState(null);
     const [{ data, loading, error }, searchRestaurants] = useRestaurants();
+    const [isFetchingMore, setIsFetchingMore] = useState(false);
 
     const getLocation = async () => {
         const { status } = await Location.requestForegroundPermissionsAsync();
@@ -28,16 +29,18 @@ const RestaurantList = ({ term }) => {
 
     useLayoutEffect(() => {
         const fetchData = async () => {
+            setIsFetchingMore(true);  // Set to true before fetching
             const location = await getLocation();
             setCurrentLocation(location);
             await searchRestaurants(term, currentPage, location);
+            setIsFetchingMore(false);  // Set to false after fetching
         };
         fetchData();
     }, [term, currentPage]);
 
     console.log({ data: data, loading, error })
 
-    if (loading) return <ActivityIndicator size="large" marginVertical={30} />
+    if (loading && !data.length) return <ActivityIndicator size="large" marginVertical={30} />
     if (error) return (
         <View style={styles.container}>
             <Text style={styles.header}>{error}</Text>
@@ -67,6 +70,7 @@ const RestaurantList = ({ term }) => {
                     showsVerticalScrollIndicator={false}
                     onEndReached={() => setCurrentPage(prev => prev + 1)}
                     onEndReachedThreshold={0.01}
+                    ListFooterComponent={isFetchingMore ? <ActivityIndicator size="large" /> : null}
                 />
             )}
         </>
