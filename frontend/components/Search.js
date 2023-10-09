@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { Keyboard, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { elevation } from '../common/styles'
@@ -13,16 +13,18 @@ const Search = ({ setFoodType }) => {
     }
 
     return (
-        <View style={[styles.inputContainer, elevation]}>
-            <Ionicons name="search" size={25} color='black' />
-            <TextInput
-                value={input}
-                style={styles.input}
-                placeholder='What are you craving?'
-                onChangeText={setInput}
-                onEndEditing={handleEndEditing}
-            />
-        </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={[styles.inputContainer, elevation]}>
+                <Ionicons name="search" size={25} color='black' />
+                <TextInput
+                    value={input}
+                    style={styles.input}
+                    placeholder='What are you craving?'
+                    onChangeText={setInput}
+                    onEndEditing={handleEndEditing}
+                />
+            </View>
+        </TouchableWithoutFeedback>
     )
 }
 

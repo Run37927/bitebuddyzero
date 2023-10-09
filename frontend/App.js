@@ -9,8 +9,10 @@ import HomePage from './screens/HomePage';
 import ChatPage from './screens/ChatPage';
 import RequestPage from './screens/RequestPage';
 import SignInScreen from './screens/SignInScreen';
-import UserProfile from './screens/UserProfile';
+import BuddyProfile from './screens/BuddyProfile';
 import BuddyConfirmModal from './screens/BuddyConfirmModal';
+import MessageScreen from './screens/Message';
+import useAuth, { AuthProvider } from './hooks/useAuth';
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -33,8 +35,8 @@ function RestaurantOverview() {
       tabBarIcon: ({ color, size }) => <Ionicons name="chatbubbles" size={size} color={color} />
     }} />
     <BottomTabs.Screen name="RequestPage" component={RequestPage} options={{
-      title: 'Invites',
-      tabBarLabel: 'Invites',
+      title: 'Eats',
+      tabBarLabel: 'Eats',
       tabBarIcon: ({ color, size }) => <Ionicons name="heart" size={size} color={color} />
     }} />
     <BottomTabs.Screen name="UserAccount" component={UserAccount} options={{
@@ -46,34 +48,41 @@ function RestaurantOverview() {
 }
 
 export default function App() {
-  const userSignedIn = false;
-
   return (
     <>
       <StatusBar style="auto" />
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{
-          headerShown: false,
-        }}>
-          {userSignedIn ? (
-            <>
-              <Stack.Group>
-                <Stack.Screen name="RestaurantOverview" component={RestaurantOverview} />
-                <Stack.Screen name="RestaurantDetails" component={RestaurantDetails} />
-                <Stack.Screen name="UserProfile" component={UserProfile} options={{
-                  headerShown: true,
-                  title: ''
-                }} />
-              </Stack.Group>
-              <Stack.Group screenOptions={{ presentation: 'modal' }}>
-                <Stack.Screen name="BuddyConfirmModal" component={BuddyConfirmModal} />
-              </Stack.Group>
-            </>
-          ) : (
-            <Stack.Screen name="SignInScreen" component={SignInScreen} />
-          )}
-        </Stack.Navigator>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
       </NavigationContainer>
     </>
+  )
+}
+
+function AppContent() {
+  const { user } = useAuth();
+  console.log("AppContent re-render: ", user);
+
+  return (
+    <Stack.Navigator screenOptions={{
+      headerShown: false,
+    }}>
+      {user ? (
+        <>
+          <Stack.Group>
+            <Stack.Screen name="RestaurantOverview" component={RestaurantOverview} />
+            <Stack.Screen name="RestaurantDetails" component={RestaurantDetails} />
+            <Stack.Screen name="BuddyProfile" component={BuddyProfile} />
+            <Stack.Screen name="Message" component={MessageScreen} />
+          </Stack.Group>
+          <Stack.Group screenOptions={{ presentation: 'modal' }}>
+            <Stack.Screen name="BuddyConfirmModal" component={BuddyConfirmModal} />
+          </Stack.Group>
+        </>
+      ) : (
+        <Stack.Screen name="SignInScreen" component={SignInScreen} />
+      )}
+    </Stack.Navigator>
   )
 }

@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity } from 'react-native'
+import { StyleSheet, SafeAreaView, Text, View, Image, FlatList, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { elevation } from '../common/styles'
 import { Ionicons } from '@expo/vector-icons'
+import BackButton from '../components/BackButton'
 
 const reviews = [
     {
@@ -34,7 +35,7 @@ const reviews = [
     }
 ];
 
-const UserProfile = ({ navigation }) => {
+const BuddyProfile = ({ navigation }) => {
     const renderReviewItem = ({ item }) => {
         return (
             <View style={styles.reviewContentCard}>
@@ -53,60 +54,68 @@ const UserProfile = ({ navigation }) => {
     }
 
     return (
-        <View style={styles.rootContainer}>
-            <View style={[styles.reviewCard, elevation]}>
-                <View style={styles.picAndName}>
-                    <Image style={styles.profilePic} source={require('../assets/emilyPic.png')} />
-                    <Text style={styles.userName}>Emily</Text>
+        <>
+            <View style={styles.backBtn} >
+                <BackButton />
+            </View>
+            <SafeAreaView style={styles.rootContainer}>
+                <View style={[styles.reviewCard, elevation]}>
+                    <View style={styles.picAndName}>
+                        <Image style={styles.profilePic} source={require('../assets/emilyPic.png')} />
+                        <Text style={styles.userName}>Emily</Text>
+                    </View>
+
+                    <View>
+                        <View style={styles.textWrapper}>
+                            <Text style={styles.reviewText}>17</Text>
+                            <Text>Reviews</Text>
+                        </View>
+                        <View style={[styles.textWrapper, { borderBottomWidth: 0 }]}>
+                            <Text style={styles.reviewText}>4.9</Text>
+                            <Ionicons name="star" size={20} color='#FFA500' />
+                        </View>
+                    </View>
                 </View>
 
+                <View style={styles.userIntroContainer}>
+                    <Text style={styles.userIntro}>I am a very good bite buddy. I love exploring new restaurants and enjoy the experiences of meeting new people through food! Become my next bite buddy and let's eat eat eat coz I'm hungry.</Text>
+                </View>
+                <View style={styles.emptyDiv}></View>
                 <View>
-                    <View style={styles.textWrapper}>
-                        <Text style={styles.reviewText}>17</Text>
-                        <Text>Reviews</Text>
-                    </View>
-                    <View style={[styles.textWrapper, { borderBottomWidth: 0 }]}>
-                        <Text style={styles.reviewText}>4.9</Text>
-                        <Ionicons name="star" size={20} color='#FFA500' />
-                    </View>
+                    <Text style={{ fontWeight: 'bold', fontSize: 20, paddingHorizontal: 30 }}>20+ bitebuddies says this about Emily...</Text>
                 </View>
-            </View>
 
-            <View style={styles.userIntroContainer}>
-                <Text style={styles.userIntro}>I am a very good bite buddy. I love exploring new restaurants and enjoy the experiences of meeting new people through food! Become my next bite buddy and let's eat eat eat coz I'm hungry.</Text>
-            </View>
-            <View style={styles.emptyDiv}></View>
-            <View>
-                <Text style={{ fontWeight: 'bold', fontSize: 20, paddingHorizontal: 30 }}>20+ bitebuddies says this about Emily...</Text>
-            </View>
+                <View style={styles.reviewListContainer}>
+                    <FlatList
+                        data={reviews}
+                        keyExtractor={(item) => item.id}
+                        renderItem={renderReviewItem}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                    />
+                </View>
 
-            <View style={styles.reviewListContainer}>
-                <FlatList
-                    data={reviews}
-                    keyExtractor={(item) => item.id}
-                    renderItem={renderReviewItem}
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                />
-            </View>
-
-            <View style={styles.stickyBottomDiv}>
-                <Text>Wednesday - Sep 26 @ 7:00 PM</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('BuddyConfirmModal')} style={styles.stickyBottomTextContainer}>
-                    <Text style={styles.stickyBottomText}>Invite</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+                <View style={styles.stickyBottomDiv}>
+                    <Text>Wednesday - Sep 26 @ 7:00 PM</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('ChatPage')} style={styles.stickyBottomTextContainer}>
+                        <Text style={styles.stickyBottomText}>Message</Text>
+                    </TouchableOpacity>
+                </View>
+            </SafeAreaView>
+        </>
     )
 }
 
-export default UserProfile
+export default BuddyProfile
 
 const styles = StyleSheet.create({
     rootContainer: {
         flex: 1,
         alignItems: 'center',
-        paddingTop: 30,
+    },
+    backBtn: {
+        marginTop: 50,
+        marginBottom: 10,
     },
     reviewCard: {
         flexDirection: 'row',
@@ -183,16 +192,16 @@ const styles = StyleSheet.create({
         bottom: 0,
         width: '100%',
         backgroundColor: 'white',
-        padding: 16,
+        padding: 20,
         alignItems: 'center',
         justifyContent: 'space-between'
     },
     stickyBottomTextContainer: {
-        width: 100,
         height: 50,
         borderRadius: 20,
         backgroundColor: '#FFA500',
         justifyContent: 'center',
+        paddingHorizontal: 16,
     },
     stickyBottomText: {
         color: '#000',

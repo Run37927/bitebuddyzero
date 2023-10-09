@@ -47,7 +47,7 @@ const ShowPotentialMatches = () => {
                 <View style={{ flexDirection: 'row' }}>
                     {dummyUsers.map((user) => {
                         return (
-                            <TouchableOpacity key={user.id} style={styles.userContainer} onPress={() => navigation.navigate('UserProfile')}>
+                            <TouchableOpacity key={user.id} style={styles.userContainer} onPress={() => navigation.navigate('BuddyProfile')}>
                                 <Image style={styles.userProfilePic} source={user.profilePic} />
                                 <View>
                                     <Text>{user.name}</Text>
